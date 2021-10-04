@@ -1,8 +1,3 @@
-extern printf
-SECTION .data
-resul dq 0.0
-
-formato db "el valor de pila: %f",10,0
 SECTION .text 
     global escalar
 
