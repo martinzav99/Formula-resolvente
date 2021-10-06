@@ -88,6 +88,8 @@ fwait
 sahf
 ...
 ```
+Dependiendo de los valores , habra 3 resultado posibles . Para el caso negativo , se imprime un mensaje llamando a la funcion printf de C , en este caso el valor guardado en la pila (push) es msg ,por lo que luego al puntero se le añade 4 para regresar al estado anterior a la llamada del print.
+Para el caso que exista un solo resultado , se cargan los datos necesario para realizar los calculos (EBP+12 = B , EBP+8 = A) . luego se guarda el resultado , esta al ser un qword(64bits) al pushearse se debe hacer en dos partes ya que la pila solo permite (32 bits) , despues se pushea el formato del mensaje y es por eso que luego de la llamada se le añade 12 al puntero para regresar a sus estado original. Para el caso positivo sucede de la misma manera que para el Negativo, solo que este mecanismo se repetira una vez mas ya que para un discriminante positivo existen dos resultados posibles.
 ```
 discriminanteNegativo:              discriminanteCero:              discriminantePositivo:    
      push msg                           fld dword [ebp+12]                fsqrt
@@ -95,10 +97,18 @@ discriminanteNegativo:              discriminanteCero:              discriminant
      add esp,4                          fld qword [dos]                   fld dword [ebp+12]
      jmp fin                            fld dword [ebp+8]                 fchs
                                         ...                               ...
-                                        call printf                       call printf 
-                                        add esp,12                        add esp,12
+                                        fst qword[resultado]              call printf 
+                                        ...                               add esp,12
+                                        call printf                       ...
+                                        add esp ,12                       fld dword [ebp+12]
+                                                                          fchs
+                                                                          fld qword[discriminante]
                                                                           ...
+                                                                          call printf
+                                                                          add esp,12
+
 ```
+### Ejemplos
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
