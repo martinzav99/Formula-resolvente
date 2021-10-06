@@ -36,6 +36,19 @@ Nota: No es necesario hacer el update en cada paso, con hacerlo una vez al princ
 - Obtener un ejecutable que muestre las raices obtenidas
 
 ### Resolución
+Lo mas importante a remarcar del codigo C es que para permitir el pasaje de parametros se usa el "extern", esta es una palabra reservada que le permite al compilador (gcc) saber que la funcion declarada se encuentra en otro codigo objeto. Por lo tanto, al momento de llamar a la funcion cuadratica, sus atributos seran cargados en la pila  y usados luego por la funcion que se encontrara en otro programa.
+
+```
+extern void cuadratica(float a,float b ,float c);
+#include <stdio.h>
+
+int main(){
+    float A,B,C;
+    ...
+    ...
+    cuadratica(A,B,C);
+    ...
+```
 
 
 
