@@ -29,16 +29,15 @@ Nota: No es necesario hacer el update en cada paso, con hacerlo una vez al princ
 
 ## Ejercicio: Formula resolvente 
 
-###pautas para el ejercicio:
--Un programa en c , que pida al usuario 3 valores e invocar una funcion que calcule la formual resolvente
--un programa para la arquitectura IA32 que calcule una función cuadrática, donde los coeficientes de la función deben ser recibidas por parámetro.
--compilar y linkear los archivos objeto de manera separada
--obtener un ejecutable que muestre las raices obtenidas
+### Pautas:
+- Un programa en c , que pida al usuario 3 valores e invocar una funcion que calcule la formual resolvente
+- Un programa para la arquitectura IA32 que calcule una función cuadrática, donde los coeficientes de la función deben ser recibidas por parámetro.
+- Compilar y linkear los archivos objeto de manera separada
+- Obtener un ejecutable que muestre las raices obtenidas
+
+### Resolución
 
 
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
