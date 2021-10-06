@@ -3,6 +3,7 @@ extern void cuadratica(float a,float b ,float c);
 
 int main(){
     float A,B,C;
+    printf("Formula resolvente :\n");
     printf("ingrese valor de A\n");
     scanf("%f",&A);
     printf("ingrese valor de B\n");
