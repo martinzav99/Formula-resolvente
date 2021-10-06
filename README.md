@@ -2,13 +2,17 @@
 
 
 ## Descripción
-En el presente trabajo se mostrarán dos ejercicios, el primero es un programa que calcula la formula resolvente y el segundo uno que calcula el producto escalar entre un número y un vector.
+En el presente trabajo se mostrarán dos ejercicios, el primero es un programa que calcula la formula resolvente y el segundo uno que calcula el producto escalar entre un número y un vector.<p>
 El objetivo del trabajo es usar el conocimiento sobre pasaje de parámetros, manejo de pila y manejo del set de instrucciones de la FPU para poder resolver los ejercicios. Por este motivo, los programas se verán realizados tanto en el lenguaje de programación C en conjunto con Assembler.
 
 ## Pre-Requisitos 
+Los siguientes comandos se ejecutan en la terminal de Linux: 
+
 _Clonar el repositorio_
 ```
-sudo apt-get install gcc 
+sudo apt update
+sudo apt-get install git
+git clone https://gitlab.com/martinzavallagamarra/tp1-orga-ii.git 
 ```
 _Uso de gcc_
 ```
@@ -20,8 +24,18 @@ _Uso de Nasm_
 sudo apt-get update
 sudo apt-get install nasm 
 ```
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+
+Nota: No es necesario hacer el update en cada paso, con hacerlo una vez al principio es suficiente.
+
+## Ejercicio: Formula resolvente 
+
+###pautas para el ejercicio:
+-Un programa en c , que pida al usuario 3 valores e invocar una funcion que calcule la formual resolvente
+-un programa para la arquitectura IA32 que calcule una función cuadrática, donde los coeficientes de la función deben ser recibidas por parámetro.
+-compilar y linkear los archivos objeto de manera separada
+-obtener un ejecutable que muestre las raices obtenidas
+
+
 
 ## Installation
 Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
