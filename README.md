@@ -1,31 +1,31 @@
 # TP1 Orga II
 
 
-## Descripción
+## Descripción 
 En el presente trabajo se mostrarán dos ejercicios, el primero es un programa que calcula la formula resolvente y el segundo uno que calcula el producto escalar entre un número y un vector.<p>
 El objetivo del trabajo es usar el conocimiento sobre pasaje de parámetros, manejo de pila y manejo del set de instrucciones de la FPU para poder resolver los ejercicios. Por este motivo, los programas se verán realizados tanto en el lenguaje de programación C en conjunto con Assembler.
 
-## Pre-Requisitos 
+## Pre-Requisitos 📋
 Los siguientes comandos se ejecutan en la terminal de Linux: 
 
-_Clonar el repositorio_
+<b>Clonar el repositorio<b>
 ```
 sudo apt update
 sudo apt-get install git
 git clone https://gitlab.com/martinzavallagamarra/tp1-orga-ii.git 
 ```
-_Uso de gcc_
+<b>Uso de gcc<b>
 ```
 sudo apt-get update
 sudo apt-get install gcc 
 ```
-_Uso de Nasm_
+<b>Uso de Nasm<b>
 ```
 sudo apt-get update
 sudo apt-get install nasm 
 ```
 
-Nota: No es necesario hacer el update en cada paso, con hacerlo una vez al principio es suficiente.
+_Nota: No es necesario hacer el update en cada paso, con hacerlo una vez al principio es suficiente._
 
 ## Ejercicio: Formula resolvente 
 
@@ -35,8 +35,8 @@ Nota: No es necesario hacer el update en cada paso, con hacerlo una vez al princ
 - Compilar y linkear los archivos objeto de manera separada
 - Obtener un ejecutable que muestre las raices obtenidas
 
-### Resolución
-Lo mas importante a remarcar del codigo C es que para permitir el pasaje de parametros se usa el "extern", esta es una palabra reservada que le permite al compilador (gcc) saber que la funcion declarada se encuentra en otro codigo objeto. Por lo tanto, al momento de llamar a la funcion cuadratica, sus atributos seran cargados en la pila  y usados luego por la funcion que se encontrara en otro programa.
+### Resolución 🔧
+Lo mas importante a remarcar del codigo C es que,  **para permitir el pasaje de parametros se usa "extern"**, esta es una palabra reservada que le permite al compilador (gcc) saber que la funcion declarada se encuentra en otro codigo objeto. Por lo tanto, al momento de llamar a la funcion cuadratica, sus atributos seran cargados en la pila  y usados luego por la funcion que se encontrara en otro programa.
 
 ```
 extern void cuadratica(float a,float b ,float c);
@@ -60,8 +60,8 @@ resultado dq 0.0
 fmt db "Raiz encontrada : %f",10,0
 ```
 En la seccion de codigo o texto nos encontramos con la etiqueta que tiene el mismo nombre que la funcion llamada desde C , esto permite saber al compilador donde empieza y termina esta rutina.<p>
-La funcion empieza con un evento llamado "enter" que consiste en alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con "leave" que regresa al entado previo al alineamiento. A continuacion , se utilizaran instrucciones de la FPU  (fld , fchs, fmul) que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
-Nota: ebp + n , hace referencia a una posicion de la pila , en este caso donde esta guardado uno de los valores enviados por parametro desde C     
+La funcion empieza con un evento llamado **"enter"** que consiste en alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con **"leave"** que regresa al entado previo al alineamiento. A continuacion , se utilizaran instrucciones de la FPU  (fld , fchs, fmul) que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
+_Nota: ebp + n , hace referencia a una posicion de la pila , en este caso donde esta guardado uno de los valores enviados por parametro desde C_     
 ```
 SECTION .text
     global cuadratica
@@ -88,8 +88,10 @@ fwait
 sahf
 ...
 ```
-Dependiendo de los valores , habra 3 resultado posibles . Para el caso negativo , se imprime un mensaje llamando a la funcion printf de C , en este caso el valor guardado en la pila (push) es msg ,por lo que luego al puntero se le añade 4 para regresar al estado anterior a la llamada del print.
-Para el caso que exista un solo resultado , se cargan los datos necesario para realizar los calculos (EBP+12 = B , EBP+8 = A) . luego se guarda el resultado , esta al ser un qword(64bits) al pushearse se debe hacer en dos partes ya que la pila solo permite (32 bits) , despues se pushea el formato del mensaje y es por eso que luego de la llamada se le añade 12 al puntero para regresar a sus estado original. Para el caso positivo sucede de la misma manera que para el Negativo, solo que este mecanismo se repetira una vez mas ya que para un discriminante positivo existen dos resultados posibles.
+Dependiendo de los valores , habra 3 resultado posibles . <p>
+**Para el caso negativo**, se imprime un mensaje llamando a la funcion printf de C , en este caso el valor guardado en la pila (push) es msg ,por lo que luego al puntero se le añade 4 para regresar al estado anterior a la llamada del print.<p>
+**Para el caso que exista un solo resultado** , se cargan los datos necesario para realizar los calculos (EBP+12 = B , EBP+8 = A) . luego se guarda el resultado , esta al ser un qword(64bits) al pushearse se debe hacer en dos partes ya que la pila solo permite (32 bits) , despues se pushea el formato del mensaje y es por eso que luego de la llamada se le añade 12 al puntero para regresar a sus estado original. <p>
+**Para el caso positivo** sucede de la misma manera que para el Negativo, solo que este mecanismo se repetira una vez mas ya que para un discriminante positivo existen dos resultados posibles.
 ```
 discriminanteNegativo:              discriminanteCero:              discriminantePositivo:    
      push msg                           fld dword [ebp+12]                fsqrt
@@ -108,8 +110,13 @@ discriminanteNegativo:              discriminanteCero:              discriminant
                                                                           add esp,12
 
 ```
-### Ejemplos
-
+### Ejemplos 🚀
+* cuadratica Sin Resultados<p>
+![Screenshot](cuadraticaNegativa.png)  
+* cuadratica Con un Resultados<p>
+![Screenshot](cuadraticaCero.png)
+* cuadratica Con dos Resultados<p>
+![Screenshot](cuadraticaPositiva.png)
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
