@@ -49,8 +49,56 @@ int main(){
     cuadratica(A,B,C);
     ...
 ```
+De la misma manera que en C, en Assembler tambien existe un extern que funciona de la misma manera, de hecho en la seccion de datos se muestra el formato (fmt) que se va a utilizar al momento de su llamada. Tambien podemos encontrar variables declaradas o auxiliares para guardar futuros resultados 
+```
+extern printf
+SECTION .data
+cuatro dq 4.0
+...
+resultado dq 0.0
+...
+fmt db "Raiz encontrada : %f",10,0
+```
+En la seccion de codigo o texto nos encontramos con la etiqueta que tiene el mismo nombre que la funcion llamada desde C , esto permite saber al compilador donde empieza y termina esta rutina.<p>
+La funcion empieza con un evento llamado "enter" que consiste en alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con "leave" que regresa al entado previo al alineamiento. A continuacion , se utilizaran instrucciones de la FPU  (fld , fchs, fmul) que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
+Nota: ebp + n , hace referencia a una posicion de la pila , en este caso donde esta guardado uno de los valores enviados por parametro desde C     
+```
+SECTION .text
+    global cuadratica
 
+cuadratica:
+push ebp
+mov ebp ,esp
+fld qword[cuatro]
+fchs
+fld dword[ebp+8]
+fmul
+...
+mov esp ,ebp
+pop ebp
 
+RET
+```
+Luego se puede apreciar , una serie de instrucciones (fstsw , fwait ,sahf) que estan mas relacionadas a guardar valores de un estado de la FPU en el registro ax (para saber si se cumple una condicion de igualdad o de extremos), esperar para evitar errores y cargar lo del registro ax en los flags del sistema.
+```
+...
+fcom qword [cero]
+fstsw ax
+fwait
+sahf
+...
+```
+```
+discriminanteNegativo:              discriminanteCero:              discriminantePositivo:    
+     push msg                           fld dword [ebp+12]                fsqrt
+     call printf                        fchs                              fst qword [discriminante]
+     add esp,4                          fld qword [dos]                   fld dword [ebp+12]
+     jmp fin                            fld dword [ebp+8]                 fchs
+                                        ...                               ...
+                                        call printf                       call printf 
+                                        add esp,12                        add esp,12
+                                                                          ...
+```
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
