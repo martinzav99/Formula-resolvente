@@ -33,9 +33,6 @@ jz discriminanteCero
 ja discriminantePositivo 
 
 discriminanteNegativo:
-    fst qword[resultado]
-    push dword[resultado+4]
-    push dword[resultado]
     push msg
     call printf
     add esp,12
