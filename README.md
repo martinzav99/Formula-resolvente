@@ -59,8 +59,8 @@ resultado dq 0.0
 ...
 fmt db "Raiz encontrada : %f",10,0
 ```
-En la seccion de codigo o texto nos encontramos con la etiqueta que tiene el mismo nombre que la funcion llamada desde C , esto permite saber al compilador donde empieza y termina esta rutina.<p>
-La funcion empieza con un evento llamado **"enter"** que consiste guardar sus posiciones y alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con **"leave"** que regresa los indices al estado previo al alineamiento. A continuacion , se utilizaran instrucciones de la FPU  (fld , fchs, fmul) que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
+**En la seccion de codigo** o texto **nos encontramos** con la etiqueta que tiene el mismo nombre que la funcion llamada desde C , esto permite saber al compilador donde empieza y termina esta rutina.<p>
+La funcion empieza con un evento llamado **"enter"** que consiste guardar sus posiciones y alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con **"leave"** que regresa los indices al estado previo al alineamiento. A continuacion , se utilizaran **instrucciones de la FPU  (fld , fchs, fmul)** que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
 _Nota: ebp + n , hace referencia a una posicion de la pila , en este caso donde esta guardado uno de los valores enviados por parametro desde C_     
 ```
 SECTION .text
