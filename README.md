@@ -60,7 +60,7 @@ resultado dq 0.0
 fmt db "Raiz encontrada : %f",10,0
 ```
 En la seccion de codigo o texto nos encontramos con la etiqueta que tiene el mismo nombre que la funcion llamada desde C , esto permite saber al compilador donde empieza y termina esta rutina.<p>
-La funcion empieza con un evento llamado **"enter"** que consiste en alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con **"leave"** que regresa los indices al estado previo al alineamiento. A continuacion , se utilizaran instrucciones de la FPU  (fld , fchs, fmul) que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
+La funcion empieza con un evento llamado **"enter"** que consiste guardar sus posiciones y alinear los indices de la pila (ebp y esp), esto sirve para tener un manejo mas estructurado de la misma y termina con **"leave"** que regresa los indices al estado previo al alineamiento. A continuacion , se utilizaran instrucciones de la FPU  (fld , fchs, fmul) que permiten realizar diferentes operaciones dentro de la pila de la FPU. <p>
 _Nota: ebp + n , hace referencia a una posicion de la pila , en este caso donde esta guardado uno de los valores enviados por parametro desde C_     
 ```
 SECTION .text
@@ -69,10 +69,10 @@ SECTION .text
 cuadratica:
 push ebp
 mov ebp ,esp
-fld qword[cuatro]
-fchs
-fld dword[ebp+8]
-fmul
+fld qword[cuatro]   ; cargo al tope de pila FPU (st0) el valor 4
+fchs                ; cambio el signo del valor en st0
+fld dword[ebp+8]    ; cargo al tope de pila FPU el valor dentro de ebp+8 = A
+fmul                ; st0 = st0 * st1
 ...
 mov esp ,ebp
 pop ebp
@@ -82,22 +82,22 @@ RET
 Luego se puede apreciar , **una serie de instrucciones (fstsw , fwait ,sahf) que estan relacionadas a guardar valores de un estado de la FPU** en el registro ax (en nuestro caso el resultado de una comparacion), esperar para evitar errores y cargar lo del registro ax en los flags del sistema(nos servira para tomar un salto condicinal adecuado).
 ```
 ...
-fcom qword [cero]
-fstsw ax
-fwait
-sahf
+fcom qword [cero]   ; comparo el valor en st0 con el valor 0
+fstsw ax            ;estado luego de comparacion lo guardo en ax 
+fwait               ;espero a que termine la isntruccion previa
+sahf                ;cargar valores al registro de flags
 ...
 ```
-Dependiendo de los valores , habra 3 resultado posibles . <p>
+Dependiendo de el condicional, habra 3 acciones posibles. <p>
 **Para el caso negativo**, se imprime un mensaje llamando a la funcion printf de C , en este caso el valor guardado(push) en la pila  es msg ,por lo que luego al puntero de pila se le añade 4(la cantidad de bytes que se ocupa en la pila por cada push) para regresar al estado anterior a la llamada del print.<p>
 **Para el caso que exista un solo resultado** , se cargan en la pila de la FPU ,los datos necesario para realizar los calculos (EBP+12 = B , EBP+8 = A). luego se guarda el resultado en un auxiliar para despues guardarlo en la pila , este auxiliar es de tamaño qword(64bits) por lo que al pushearse se debe hacer en dos partes ya que la pila solo permite 32 bits.Finalmente, se pushea el formato del mensaje y para regresar la pila a su estado previo llamado de la funcion print, se le agrega 12 al puntero de pila(esp). <p>
 **Para el caso positivo** sucede de la misma manera que para el Negativo, solo que este mecanismo se repetira una vez mas ya que para un discriminante positivo existen dos resultados posibles.
 ```
 discriminanteNegativo:              discriminanteCero:              discriminantePositivo:    
-     push msg                           fld dword [ebp+12]                fsqrt
-     call printf                        fchs                              fst qword [discriminante]
+     push msg                           fld dword [ebp+12]                fsqrt                         ;st0 = raiz cuadrada de st0
+     call printf                        fchs                              fst qword [discriminante]     ;guardo valor st0 en variable discriminante
      add esp,4                          fld qword [dos]                   fld dword [ebp+12]
-     jmp fin                            fld dword [ebp+8]                 fchs
+                                        fld dword [ebp+8]                 fchs
                                         ...                               ...
                                         fst qword[resultado]              call printf 
                                         ...                               add esp,12
@@ -141,7 +141,7 @@ int main(){
 return 0;
 }
 ```
-De la misma manera que el ejercicio de la cuadratica , tenemos en assembler una etiqueta con el nombre de la funcion llamada desde c. Tambien, se muestran los respectivos enter - leave  y **en este caso usaremos resgistros de proposito general ecx y edx** para saber caundo termina un vector. 
+De la misma manera que el ejercicio de la cuadratica , tenemos en assembler una etiqueta con el nombre de la funcion llamada desde c. Tambien, se muestran los respectivos enter - leave  y en este caso **usaremos resgistros de proposito general ecx y edx** para saber caundo termina un vector. 
 ```
 SECTION .text 
     global escalar
@@ -160,21 +160,14 @@ pop ebp
 ret 
 
 ```
- Se realiza un ciclo , donde por cada iteracion se guarda los valores de edx y ecx en la pila para evitar que cambien .Despues se guarda en eax el puntero del vector (la direccion de memoria) , y a continuacion cargar el valor de la posicion de memoria en la pila FPU , el valor de r y luego los multiplico . Despues guardo ese resultado directamente una posicion de memoria (la que sea correspondiente a cada posicion del vector).
-Finalemente saco de la pila ecx y edx realizo la cuentas para saber si se termino de recorrer el vector y sino vuelvo a continuar con la sguiente posicion.  
+Se guarda en eax la direccion de memoria del primer valor de vector , luego se guarda en la pila FPU  el valor de esa direccion de memoria + el dezplzamiento generado por edx , tambien se guarda el valor de r y se multiplican , el resultado lo cargamos en la direccion de memoria + el dezplazamiento modificando asi su valor original . **En cada iteracion del ciclo se va agregando el tamaño de un flaot a edx que permitiria desplazarte al siguiente elemnto del vector y a ecx se le va restand uno hasta que llegue a 0 significando asi que no tiene mas elementos que recorrer.**
 ```
 ciclo:
-push edx
-push ecx
-
 mov eax,[ebp+8]       ; direccion de memoria del primer valor
 fld dword [eax+ edx ] ; guardo el valor de alguna posicion del vector en la pila FPU
 fld dword [ebp+16]    ; guardo el escalar en la pila FPU
 fmul                  ; st0 = st0 * st1 
 fst dword [eax+edx]   ; guardo el valor de st0 en la posicion de memoria adecuada 
-
-pop ecx
-pop edx
 
 add edx ,4            ; 4bytes es el tamano de un float 
 dec ecx               ; para saber cuando dejo de tener posiciones que recorrer
