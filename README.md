@@ -126,8 +126,63 @@ discriminanteNegativo:              discriminanteCero:              discriminant
 
 ### Resolución 🔧
 
-### Ejemplos 🚀
+```
+extern void escalar(float *p,int size,float r);
+#include<stdio.h>
+int main(){
+    
+    float array[] = {-2.345,3.21,-1258};
+    float multiplicando = 7.212;
+    int tamano = sizeof(array)/sizeof(float);
+    ...
+    escalar(&array[0],tamano,multiplicando);
+return 0;
+}
+```
 
+```
+SECTION .text 
+    global escalar
+
+escalar:
+
+push ebp
+mov ebp,esp
+
+mov ecx ,[ebp+12] ;tamano de vector
+mov edx ,0        ;sirve para recorrer el vector  
+...
+mov esp,ebp
+pop ebp
+
+ret 
+
+```
+
+```
+ciclo:
+push edx
+push ecx
+
+mov eax,[ebp+8]       ; direccion de memoria del primer valor
+fld dword [eax+ edx ] ; guardo el valor de alguna posicion del vector en la pila FPU
+fld dword [ebp+16]    ; guardo el escalar en la pila FPU
+fmul                  ; st0 = st0 * st1 
+fst dword [eax+edx]   ; guardo el valor de st0 en la posicion de memoria adecuada 
+
+pop ecx
+pop edx
+
+add edx ,4            ; 4bytes es el tamano de un float 
+dec ecx               ; para saber cuando dejo de tener posiciones que recorrer
+jnz ciclo
+
+```
+### Ejemplos 🚀
+* r positivo
+![Screenshot](escalar1.png)
+* r negativo 
+![Screenshot](escalar2.png)
 ## Roadmap
 If you have ideas for releases in the future, it is a good idea to list them in the README.
 
