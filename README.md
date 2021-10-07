@@ -111,11 +111,11 @@ discriminanteNegativo:              discriminanteCero:              discriminant
 
 ```
 ### Ejemplos 🚀
-* cuadratica Sin Resultados<p>
+* **Cuadratica sin resultados**<p>
 ![Screenshot](cuadraticaNegativa.png)  
-* cuadratica Con un Resultados<p>
+* **Cuadratica con un resultados**<p>
 ![Screenshot](cuadraticaCero.png)
-* cuadratica Con dos Resultados<p>
+* **cuadratica con dos resultados**<p>
 ![Screenshot](cuadraticaPositiva.png)
 
 ## Ejercicio: Producto Escalar 
@@ -125,6 +125,8 @@ discriminanteNegativo:              discriminanteCero:              discriminant
 - Debe multiplicar cada elemento del vector por r 
 
 ### Resolución 🔧
+Aunque para este ejercicio no era necesario hacerlo en dos programas separados, para mantener la correlacion con el ejercicio anterior se decidio pasar los parametros por C.<p>
+Al igual que en el ejercicio anterior **haremos uso de extern** y en este caso la **funcion cargara en la pila el puntero a la primera posicion del vector** (una direccion de memoria), **el tamaño** donde **es importante que sea entero** para evitar futuros errores , y el valor r.
 
 ```
 extern void escalar(float *p,int size,float r);
@@ -139,7 +141,7 @@ int main(){
 return 0;
 }
 ```
-
+De la misma manera que el ejercicio de la cuadratica , tenemos en assembler una etiqueta con el nombre de la funcion llamada desde c. Tambien, se muestran los respectivos enter - leave  y **en este caso usaremos resgistros de proposito general ecx y edx** para saber caundo termina un vector. 
 ```
 SECTION .text 
     global escalar
@@ -158,7 +160,8 @@ pop ebp
 ret 
 
 ```
-
+ Se realiza un ciclo , donde por cada iteracion se guarda los valores de edx y ecx en la pila para evitar que cambien .Despues se guarda en eax el puntero del vector (la direccion de memoria) , y a continuacion cargar el valor de la posicion de memoria en la pila FPU , el valor de r y luego los multiplico . Despues guardo ese resultado directamente una posicion de memoria (la que sea correspondiente a cada posicion del vector).
+Finalemente saco de la pila ecx y edx realizo la cuentas para saber si se termino de recorrer el vector y sino vuelvo a continuar con la sguiente posicion.  
 ```
 ciclo:
 push edx
@@ -179,21 +182,15 @@ jnz ciclo
 
 ```
 ### Ejemplos 🚀
-* r positivo<p>
+_Nota: En algunos resultados puede no ser exactamente precisos y presentar errores de redondeo_ 
+Para mas informacion:[Link](http://puntoflotante.org/errors/rounding/)
+* **r positivo**<p>
 ![Screenshot](escalar2.png)
-* r negativo <p>
+* **r negativo** <p>
 ![Screenshot](escalar1.png)
-_Nota: En algunos resultados puede no ser exactamente precisos y presentar errores de redondeo
-Para mas informacion:[Link](http://puntoflotante.org/errors/rounding/")._
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-## Autor
-Martin Zavalla Gamarra.
+## Ejecucion 📦
+Se puede notar en los ejemplos que para ejecutar los programas se hace uso de un archivo .sh , estos son ejecutables que contienen el codigo de compilacion de cada programa junto con su ejecuccion.
 
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
-
+## Autor ✒️
+- Martin Zavalla Gamarra.
