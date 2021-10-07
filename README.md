@@ -179,10 +179,12 @@ jnz ciclo
 
 ```
 ### Ejemplos 🚀
-* r positivo
-![Screenshot](escalar1.png)
-* r negativo 
+* r positivo<p>
 ![Screenshot](escalar2.png)
+* r negativo <p>
+![Screenshot](escalar1.png)
+_Nota: En algunos resultados puede no ser exactamente precisos y presentar errores de redondeo
+Para mas informacion:[Link](http://puntoflotante.org/errors/rounding/")._
 ## Roadmap
 If you have ideas for releases in the future, it is a good idea to list them in the README.
 
