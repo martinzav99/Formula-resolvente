@@ -160,7 +160,7 @@ pop ebp
 ret 
 
 ```
-Se guarda en eax la direccion de memoria del primer valor de vector , luego se guarda en la pila FPU  el valor de esa direccion de memoria + el dezplzamiento generado por edx , tambien se guarda el valor de r y se multiplican , el resultado lo cargamos en la direccion de memoria + el dezplazamiento modificando asi su valor original . **En cada iteracion del ciclo se va agregando el tamaño de un flaot a edx que permitiria desplazarte al siguiente elemnto del vector y a ecx se le va restand uno hasta que llegue a 0 significando asi que no tiene mas elementos que recorrer.**
+Se guarda en eax la direccion de memoria del primer valor de vector , luego se guarda en la pila FPU  el valor de esa direccion de memoria + el dezplzamiento generado por edx , tambien se guarda el valor de r y se multiplican , el resultado lo cargamos en la direccion de memoria + el dezplazamiento modificando asi su valor original . **En cada iteracion** del ciclo **se va agregando el tamaño de un float a edx** que permitiria desplazarte al siguiente elemnto del vector **y a ecx se le va restando uno hasta que llegue a 0** significando asi que no tiene mas elementos que recorrer.
 ```
 ciclo:
 mov eax,[ebp+8]       ; direccion de memoria del primer valor
